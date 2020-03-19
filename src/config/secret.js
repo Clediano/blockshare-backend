@@ -8,12 +8,6 @@ module.exports = {
   network: process.env.NETWORK,
   
   auth_key: process.env.AUTH_SECRET,
-  
-  db_name: process.env.DB_NAME,
-  db_user: process.env.DB_USER,
-  db_pass: process.env.DB_PASS,
-  db_host: process.env.DB_HOST,
-  db_dialect: process.env.DB_DIALECT,
 
   mail_host: process.env.MAIL_HOST,
   mail_user: process.env.MAIL_USER,
