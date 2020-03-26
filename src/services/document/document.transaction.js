@@ -30,7 +30,7 @@ class DocumentTransaction {
     };
 
     findByTxid(organizationid, text, offset, limit) {
-        return Transaction.findAll({
+        return Transaction.findAndCountAll({
             where: {
                 txid: {
                     [Op.like]: `%${text}%`
