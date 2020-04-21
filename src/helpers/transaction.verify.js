@@ -1,23 +1,39 @@
 const cron = require('node-cron');
-const Organization = require('../database/postgres/models').organization;
+const Transaction = require('../database/postgres/models').transaction;
+const BlockchainTransaction = require('../services/blockchain/blockchain.transaction');
 
 // -> '0 */1 * * *' : “At minute 0 past every hour.”.
 // -> '*/10 * * * *' : “At every 10th minute.”
-cron.schedule('0 */1 * * *', async () => {
+cron.schedule('*/10 * * * *', async () => {
     try {
-        const organizations = await Organization.findAll({include: [{association: 'users'}]});
+        const transactions = await Transaction.findAll({where: {confirmed: false}, order: [['createdAt', 'ASC']]});
 
-        organizations && organizations.map(({dataValues: organization}) => {
-            if (organization.users && organization.users.length === 0) {
-                let dataCriacao = new Date(organization.createdAt).getTime();
-                let dataAtual = new Date().getTime();
+        transactions && transactions.map(({dataValues: transaction}) => {
+            BlockchainTransaction.getTransaction(transaction.txid)
+                .then(resp => {
+                    if (resp.payload.confirmations > 6) {
+                        Transaction.update({
+                            confirmations: resp.payload.confirmations,
+                            confirmed: true
+                        }, {
+                            where: {
+                                id: transaction.id
+                            }
+                        });
+                    } else {
+                        Transaction.update({
+                            confirmations: resp.payload.confirmations
+                        }, {
+                            where: {
+                                id: transaction.id
+                            }
+                        });
+                    }
+                })
+                .catch(err => {
+                    throw new Error(err);
+                });
 
-                if((dataAtual - dataCriacao) < 86400000) { //faz mais de 1 dia que criou a conta
-                    Organization.destroy({
-                        where: {id: organization.id}
-                    });
-                }
-            }
         });
     } catch (err) {
         console.log(err)
