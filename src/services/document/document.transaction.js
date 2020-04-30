@@ -25,7 +25,8 @@ class DocumentTransaction {
                 }
             ],
             offset,
-            limit
+            limit,
+            order: [['createdAt', 'DESC']]
         });
     };
 
@@ -33,7 +34,7 @@ class DocumentTransaction {
         return Transaction.findAndCountAll({
             where: {
                 txid: {
-                    [Op.like]: `%${text}%`
+                    [Op.iLike]: `%${text}%`
                 },
             },
             include: [
@@ -51,6 +52,7 @@ class DocumentTransaction {
             ],
             offset,
             limit,
+            order: [['createdAt', 'DESC']]
         });
     };
 

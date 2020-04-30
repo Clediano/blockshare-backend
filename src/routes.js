@@ -29,6 +29,7 @@ routes.post('/organization/:organizationid/notifications/:notificationid/reject'
 routes.post('/organization/:organizationid/notifications/:notificationid/accept', AuthenticationService.authorize, NotificationController.acceptSolicitaion);
 
 routes.get('/organization/:organizationid/shared/all/:offset/:limit', AuthenticationService.authorize, FriendController.findAllSharedOrganizations);
+routes.get('/organization/:organizationid/shared/all/emails', AuthenticationService.authorize, FriendController.findAllSharedEmailOrganizations);
 routes.get('/organization/:organizationid/shared/name/:text/:offset/:limit', AuthenticationService.authorize, FriendController.findSharedOrganizationByName);
 routes.get('/organization/:organizationid/shared/email/:text/:offset/:limit', AuthenticationService.authorize, FriendController.findSharedOrganizationByEmail);
 
@@ -41,21 +42,24 @@ routes.get('/organization/address/:address', AuthenticationService.authorize, Wa
 //User
 routes.post('/user/:organizationid', UserController.createUser);
 routes.get('/users/:organizationid', UserController.listUsers);
-
 routes.post('/avatar', AuthenticationService.authorize, upload.single('file'), UserAvatarController.updateAvatar);
 routes.delete('/avatar/:avatarid', AuthenticationService.authorize, UserAvatarController.removeAvatar);
 
 routes.post('/authentication', UserController.authenticate);
 
+//Transactions
 routes.post('/transaction', AuthenticationService.authorize, upload.single('file'), TransactionController.createTransaction);
+routes.post('/transaction/share', AuthenticationService.authorize, upload.single('file'), TransactionController.createTransactionAndShareDocument);
 routes.get('/transactions/organization/:organizationid/:offset/:limit', AuthenticationService.authorize, TransactionController.getAllTransactions);
 routes.get('/transactions/organization/:organizationid/search/txid/:text/:offset/:limit', AuthenticationService.authorize, TransactionController.findTransactionByTxid);
 routes.get('/transactions/fee', AuthenticationService.authorize, TransactionController.getTransactionFee);
 
+//Archives
 routes.post('/archive', AuthenticationService.authorize, upload.single('file'), ArchiveController.upload);
 routes.get('/archive/:id', AuthenticationService.authorize, ArchiveController.findById);
 routes.delete('/archive/:id', AuthenticationService.authorize, ArchiveController.delete);
 
+//Dashboard
 routes.get('/dashboard/count_number_of_documents_not_registred/:organizationid', AuthenticationService.authorize, DashboardController.countNumberOfDocumentsNotRegistred);
 routes.get('/dashboard/count_number_of_documents_registred/:organizationid', AuthenticationService.authorize, DashboardController.countNumberOfDocumentsRegistred);
 routes.get('/dashboard/count_number_of_friends/:organizationid', AuthenticationService.authorize, DashboardController.countNumberOfFriends);

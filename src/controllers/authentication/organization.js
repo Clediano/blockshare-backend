@@ -22,7 +22,7 @@ class OrganizationController {
                                         from: mail_user,
                                         to: email,
                                         subject: "Blockshare - Criação de usuário",
-                                        text: `Você criou uma organização no Blockshare. Você pode acessar este <a target="_blank" href="${base_url_frontend}/user/${organization.id}">link</a> para concluir o cadastro. Caso não tenha se cadastrado, basta ignorar este e-mail.`,
+                                        text: `Você criou uma organização no Blockshare. Você pode acessar este <a target="_blank" href="${base_url_frontend}/user/${organization.id}">link</a> para concluir o cadastro. Caso não tenha se cadastrado, basta ignorar este e-mail. Caso não consiga clicar no link copie e cole este link no seu navegador: ${base_url_frontend}/user/${organization.id}`,
                                     };
                                     Mailer.sendMail(message, (err, response) => {
                                         if (err) {

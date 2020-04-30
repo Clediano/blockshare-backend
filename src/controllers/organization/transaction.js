@@ -3,7 +3,7 @@ const BlockchainTransaction = require('../../services/blockchain/blockchain.tran
 const DocumentTransaction = require('../../services/document/document.transaction');
 const Archive = require('../../services/archive/archive.upload');
 const Document = require('../../services/document/document');
-
+const Mailer = require('../../helpers/mailer');
 const fs = require('fs');
 
 class TransactionController {
@@ -70,6 +70,22 @@ class TransactionController {
                     });
                 });
         });
+    }
+
+    createTransactionAndShareDocument(req, res) {
+        const Transaction = new TransactionController();
+        Transaction.createTransaction(req, res);
+
+        const { emails } = req.body;
+
+        const arrayEmail = emails.split(",");
+        const attachment = {
+            filename: req.file.filename,
+            path: req.file.path
+        };
+        
+        Mailer.sendEmail(arrayEmail, attachment, 'Olha, você recebeu um novo documento! 😲😲', 'O documento recebido se encontra em anexo. Calma, não fique ancioso, ele não vai fugir!!!');
+
     }
 
     getTransaction(req, res) {

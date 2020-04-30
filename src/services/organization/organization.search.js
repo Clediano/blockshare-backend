@@ -19,19 +19,22 @@ class OrganizationSearch {
         return this.findOrganizationsInvited(organizationid)
             .then(values => {
                 const organizationsAlreadyInvitedForMe = values && values.map(organization => organization.invitedid);
-                return Organization.findAndCountAll({
-                    where: {
-                        name: {
-                            [Op.like]: `%${text}%`
+                return {
+                    organizations: Organization.findAndCountAll({
+                        where: {
+                            name: {
+                                [Op.iLike]: `%${text}%`
+                            },
+                            id: {
+                                [Op.notIn]: [organizationid]
+                            }
                         },
-                        id: {
-                            [Op.notIn]: [organizationid, ...organizationsAlreadyInvitedForMe]
-                        }
-                    },
-                    attributes: ['id', 'name', 'email', 'oidphoto'],
-                    offset,
-                    limit,
-                })
+                        attributes: ['id', 'name', 'email', 'oidphoto'],
+                        offset,
+                        limit,
+                    }),
+                    organizationsAlreadyInvitedForMe
+                }
             });
     };
 
@@ -42,7 +45,7 @@ class OrganizationSearch {
                 return Wallet.findAndCountAll({
                     where: {
                         address: {
-                            [Op.like]: `%${text}%`
+                            [Op.iLike]: `%${text}%`
                         },
                         organizationid: {
                             [Op.notIn]: [organizationid, ...organizationsAlreadyInvitedForMe]

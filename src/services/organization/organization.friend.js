@@ -41,6 +41,24 @@ class OrganizationFriend {
         });
     };
 
+    findAllSharedEmailOrganizations(organizationid) {
+        return Friend.findAll({
+            where: {
+                interestedid: organizationid
+            },
+            attributes: {
+                exclude: ['match','invitedid', 'interestedid', 'updatedAt', 'createdAt'],
+            },
+            include: [
+                {
+                    association: 'invited',
+                    attributes: ['name', 'email', 'id'],
+
+                }
+            ]
+        }).map(friend => friend.invited);
+    };
+
     findSharedOrganizationByName(organizationid, name, offset, limit) {
         return Friend.findAll({
             where: {
@@ -55,7 +73,7 @@ class OrganizationFriend {
                     attributes: ['name', 'email', 'id', 'oidphoto'],
                     where: {
                         name: {
-                            [Op.like]: `%${name}%`
+                            [Op.iLike]: `%${name}%`
                         },
                     },
                     include: [
@@ -85,7 +103,7 @@ class OrganizationFriend {
                     attributes: ['name', 'email', 'id', 'oidphoto'],
                     where: {
                         email: {
-                            [Op.like]: `%${name}%`
+                            [Op.iLike]: `%${name}%`
                         },
                     },
                     include: [
