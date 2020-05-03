@@ -52,6 +52,7 @@ routes.post('/transaction', AuthenticationService.authorize, upload.single('file
 routes.post('/transaction/share', AuthenticationService.authorize, upload.single('file'), TransactionController.createTransactionAndShareDocument);
 routes.get('/transactions/organization/:organizationid/:offset/:limit', AuthenticationService.authorize, TransactionController.getAllTransactions);
 routes.get('/transactions/organization/:organizationid/search/txid/:text/:offset/:limit', AuthenticationService.authorize, TransactionController.findTransactionByTxid);
+routes.get('/transactions/search/hash/:hash', AuthenticationService.authorize, TransactionController.findTransactionByHash);
 routes.get('/transactions/fee', AuthenticationService.authorize, TransactionController.getTransactionFee);
 
 //Archives

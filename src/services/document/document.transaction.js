@@ -56,6 +56,16 @@ class DocumentTransaction {
         });
     };
 
+    findByHash(hash) {
+        return Transaction.findOne({
+            where: {
+                txid: {
+                    [Op.eq]: `%${hash}%`
+                },
+            }
+        });
+    };
+
 }
 
 module.exports = new DocumentTransaction();
