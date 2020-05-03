@@ -136,7 +136,7 @@ class TransactionController {
 
     findTransactionByHash(req, res) {
         const { hash } = req.params;
-console.log('opa')
+
         DocumentTransaction.findByHash(hash)
             .then(resp => {
                 return res.status(200).send(resp);

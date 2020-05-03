@@ -59,10 +59,23 @@ class DocumentTransaction {
     findByHash(hash) {
         return Transaction.findOne({
             where: {
-                txid: {
-                    [Op.eq]: `%${hash}%`
+                hash: {
+                    [Op.eq]: `${hash}`
                 },
-            }
+            },
+            include: [
+                {
+                    association: 'document',
+                    attributes: ['id'],
+                    include: [
+                        {
+                            association: 'organization',
+                            attributes: ['name']
+                        }
+                    ]
+                }
+            ],
+            attributes: ['confirmed', 'txid', 'createdAt']
         });
     };
 
